@@ -1,0 +1,48 @@
+<html>
+<head>
+  <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+</head>
+<body>
+  <h3>You can make the following GET requests</h3>
+  <ul>
+    <li>/file/sample.html -- returns the content of the file sample.html</li>
+    <li>/json -- returns a JSON object from the /random request</li>
+    <li>/random -- returns index.html</li>
+    <li>/multiply?num1=3&num2=4 -- multiplies num1 and num2 and returns the result</li>
+    <li>/github?query=users/amehlhase316/repos -- returns information about the public repositories of the given GitHub user</li>
+  </ul>
+
+  <h3>New Request Types</h3>
+  
+  <p>1. <strong>Currency Conversion</strong>:</p>
+  <p>This request converts an amount from one currency to another using predefined exchange rates.</p>
+  <p>Arguments:</p>
+  <ul>
+    <li><code>amount</code>: The amount to be converted (e.g., 100).</li>
+    <li><code>from</code>: The currency to convert from (e.g., USD).</li>
+    <li><code>to</code>: The currency to convert to (e.g., EUR).</li>
+  </ul>
+  <p>Example URL: <code>http://localhost:9000/convertCurrency?amount=100&from=USD&to=EUR</code></p>
+  <p>Example Data:</p>
+  <pre>
+  Converted amount: 85.0 EUR
+  </pre>
+
+  <p>2. <strong>Greeting Message</strong>:</p>
+  <p>This request generates a personalized greeting message based on the user's name and the specified language.</p>
+  <p>Arguments:</p>
+  <ul>
+    <li><code>name</code>: The name of the person to greet (e.g., John).</li>
+    <li><code>language</code>: The language for the greeting (e.g., English, Spanish, French).</li>
+  </ul>
+  <p>Example URL: <code>http://localhost:9000/greet?name=John&language=Spanish</code></p>
+  <p>Example Data:</p>
+  <pre>
+  Hola, John!
+  </pre>
+
+  <h3>File Structure in www (you can use /file/www/FILENAME):</h3>
+  ${links}
+</body>
+</html>
+

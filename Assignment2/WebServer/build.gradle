@@ -1,0 +1,38 @@
+// set as java application
+apply plugin: 'application'
+
+//define main class for the SimpleServer
+mainClassName = 'SimpleServer'
+
+// Task to run SimpleWebServer
+task SimpleWebServer(type: JavaExec) {
+  group 'http'
+  description 'Simple Http Demo'
+
+  classpath = sourceSets.main.runtimeClasspath
+
+  main = 'httpServer.WebServer'
+  standardInput = System.in
+}
+
+// Task to run FunWebServer (your current focus)
+task FunWebServer(type: JavaExec) {
+  group 'http'
+  description 'Fun Http Server with GitHub integration'
+
+  classpath = sourceSets.main.runtimeClasspath
+
+  main = 'funHttpServer.WebServer'
+  standardInput = System.in
+}
+
+// Configure repositories to pull in dependencies
+repositories {
+  mavenCentral()
+}
+
+// Add dependencies for JSON parsing
+dependencies {
+  // Include the org.json library for handling JSON data
+  implementation 'org.json:json:20210307'
+}
