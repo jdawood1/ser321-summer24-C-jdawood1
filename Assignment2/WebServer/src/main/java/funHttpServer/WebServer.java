@@ -398,13 +398,21 @@ class WebServer {
    */
   public static Map<String, String> splitQuery(String query) throws UnsupportedEncodingException {
     Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+
+    if (query == null || query.isEmpty()) {
+      return query_pairs;  // Return an empty map if query is null or empty
+    }
+
     // "q=hello+world%2Fme&bob=5"
     String[] pairs = query.split("&");
     // ["q=hello+world%2Fme", "bob=5"]
     for (String pair : pairs) {
       int idx = pair.indexOf("=");
-      query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
-          URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+      if (idx > 0) {  // Ensure that the '=' exists and is not at the start
+        String key = URLDecoder.decode(pair.substring(0, idx), "UTF-8");
+        String value = URLDecoder.decode(pair.substring(idx + 1), "UTF-8");
+        query_pairs.put(key, value);
+      }
     }
     // {{"q", "hello world/me"}, {"bob","5"}}
     return query_pairs;
