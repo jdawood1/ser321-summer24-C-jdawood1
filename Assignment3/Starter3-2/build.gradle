@@ -1,0 +1,65 @@
+// set as java application
+apply plugin: 'application'
+
+// define main class (replace 'Concentration' with the actual main class if necessary)
+mainClassName = 'Concentration'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation group: 'org.json', name: 'json', version: '20231013'
+  testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+}
+
+sourceSets {
+  main {
+    java {
+      srcDirs = ['src/main/java']
+    }
+  }
+  test {
+    java {
+      srcDirs = ['src/test/java']
+    }
+  }
+}
+
+test {
+  useJUnitPlatform() // Enable JUnit 5 for tests
+}
+
+tasks.register('runClient', JavaExec) {
+  group = 'application'
+  description = 'Runs the client for the movie guessing game'
+
+  classpath = sourceSets.main.runtimeClasspath
+  main = 'Assign32starter.ClientGui'
+
+  standardInput = System.in
+
+  // Pass port and host as arguments from the command line
+  doFirst {
+    if (!project.hasProperty('port') || !project.hasProperty('host')) {
+      throw new GradleException("Please provide 'port' and 'host' parameters")
+    }
+    args = ["-Pport=${port}", "-Phost=${host}"]
+  }
+}
+
+tasks.register('runServer', JavaExec) {
+  group = 'application'
+  description = 'Runs the server for the movie guessing game'
+
+  classpath = sourceSets.main.runtimeClasspath
+  main = 'Assign32starter.SockServer'
+
+  // Pass port as an argument from the command line
+  doFirst {
+    if (!project.hasProperty('port')) {
+      throw new GradleException("Please provide 'port' parameter")
+    }
+    args = ["-Pport=${port}"]
+  }
+}
