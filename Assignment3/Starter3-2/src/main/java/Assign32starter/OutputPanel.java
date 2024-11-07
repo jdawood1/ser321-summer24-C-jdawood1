@@ -29,7 +29,7 @@ import javax.swing.JLabel;
 public class OutputPanel extends JPanel {
   // Needed because JPanel is Serializable
   private static final long serialVersionUID = 2L;
-  
+
 
   /**
    * Generic event handler for events generated in the panel GUI
@@ -37,17 +37,18 @@ public class OutputPanel extends JPanel {
    * Uses Observer pattern
    */
   public interface EventHandlers {
-    // Executes for every key press in the input textbox
+    // Executes for every key press in the input text box
     void inputUpdated(String input);
     
     // executes when the submit button is clicked
     void submitClicked();
   }
-  private JLabel pointsLabel = new JLabel("Current Points this round: 0");
-  private JTextField input;
-  private JButton submit;
-  private JTextArea area;
-  private ArrayList<EventHandlers> handlers = new ArrayList<>();
+  private final JLabel pointsLabel = new JLabel("Points: 0 | Total Score: 0");
+  private final JTextField input;
+  private final JButton submit;
+  private final JTextArea area;
+  private final ArrayList<EventHandlers> handlers = new ArrayList<>();
+
 
   /**
    * Constructor
@@ -57,16 +58,16 @@ public class OutputPanel extends JPanel {
 
     // Setup input text box
     GridBagConstraints c = new GridBagConstraints();
-    
 
-    
+
+
     c = new GridBagConstraints();
     c.fill = GridBagConstraints.HORIZONTAL;
     c.gridx = 0;
     c.gridy = 0;
     c.weightx = 0.3;
     add(this.pointsLabel, c);
-    
+
 
     // c = new GridBagConstraints();
     // c.fill = GridBagConstraints.HORIZONTAL;
@@ -142,11 +143,13 @@ public class OutputPanel extends JPanel {
 
   /**
    * Set points in label box
-   * @param points current points in round
+   * @param pointsThisRound current points in round
    */
-  public void setPoints(int points) {
-    pointsLabel.setText("Current Points this round: " + points);
+
+  public void setPoints(int pointsThisRound, int totalScore) {
+    pointsLabel.setText("Points: " + pointsThisRound + " | Total Score: " + totalScore);
   }
+
 
   /**
    * Set input text box text

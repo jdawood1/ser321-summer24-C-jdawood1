@@ -1,0 +1,29 @@
+{
+    "Colosseum": {
+        "images": ["Colosseum1.png", "Colosseum2.png", "Colosseum3.png", "Colosseum4.png"],
+        "hints": [
+            "This lively Roman square was built on the site of an ancient stadium and is famous for its beautiful fountains and baroque architecture.",
+            "In this iconic Roman arena, gladiators wielded swords like this to entertain crowds of up to 80,000 spectators.",
+            "This iconic structure, found in the heart of Rome, was commissioned by Emperor Vespasian and completed by his son, Titus.",
+            "This iconic arena has a name that’s now commonly used to describe large stadiums around the world."
+        ]
+    },
+    "Grand Canyon": {
+        "images": ["GrandCanyon1.png", "GrandCanyon2.png", "GrandCanyon3.png", "GrandCanyon4.png"],
+        "hints": [
+            "In Arizona's desert landscape, this natural wonder was carved by the Colorado River over millions of years, revealing layers of red rock.",
+            "Spanning 277 miles and reaching depths over a mile, this natural wonder is as rich in history as it is in size.",
+            "This canyon is located in the southwestern United States, primarily in Arizona.",
+            "It’s one of the Seven Natural Wonders of the World, known for its stunning viewpoints."
+        ]
+    },
+    "Stonehenge": {
+        "images": ["Stonehenge1.png", "Stonehenge2.png", "Stonehenge3.png", "Stonehenge4.png"],
+        "hints": [
+            "Set in the wide, open plains of England, this prehistoric monument is composed of massive standing stones.",
+            "Though its purpose is unknown, this site’s carefully arranged stones suggest rituals or early astronomy.",
+            "Located in England and built over 4,000 years ago, this monument aligns with the sunrise on the summer solstice.",
+            "It’s one of the most famous sites in the United Kingdom, shrouded in mystery and folklore."
+        ]
+    }
+}

@@ -10,7 +10,6 @@ repositories {
 
 dependencies {
   implementation group: 'org.json', name: 'json', version: '20231013'
-  testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
 }
 
 sourceSets {
@@ -19,15 +18,6 @@ sourceSets {
       srcDirs = ['src/main/java']
     }
   }
-  test {
-    java {
-      srcDirs = ['src/test/java']
-    }
-  }
-}
-
-test {
-  useJUnitPlatform() // Enable JUnit 5 for tests
 }
 
 tasks.register('runClient', JavaExec) {
