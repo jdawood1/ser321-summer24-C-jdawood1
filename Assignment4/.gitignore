@@ -1,0 +1,15 @@
+# Ignore IDE settings
+.idea/
+
+# Ignore build outputs
+/build/
+*.class
+
+# Ignore logs and temporary files
+logs/
+*.log
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+

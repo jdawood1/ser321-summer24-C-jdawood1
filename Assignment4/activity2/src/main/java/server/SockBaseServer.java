@@ -469,17 +469,19 @@ class SockBaseServer implements Runnable {
                 break;
 
             case 4: // Clear grid
-                if (row < 1 || row > 3 || column < 1 || column > 3) {
+                int gridNumber = row;
+                if (gridNumber < 1 || gridNumber > 9) {
                     return Response.newBuilder()
                             .setResponseType(Response.ResponseType.ERROR)
-                            .setErrorType(3) // Grid coordinates out of bounds
-                            .setMessage("Invalid grid coordinates for clearing. Please provide grid row/column between 1 and 3.")
+                            .setErrorType(3) // Grid number out of bounds
+                            .setMessage("Invalid grid number. Please choose a number between 1 and 9.")
                             .setBoard(game.getDisplayBoard())
                             .setMenuoptions(SockBaseServer.gameOptions)
                             .setNext(3)
                             .build();
                 }
-                result = game.updateBoard(row - 1, column - 1, 0, 4);
+                int startCol = ((gridNumber - 1) % 3) * 3;
+                result = game.updateBoard(gridNumber - 1, startCol, value, 4);
                 message = " 3x3 grid cleared. (-5 points)";
                 evalType = Response.EvalType.CLEAR_GRID;
                 break;
@@ -493,6 +495,8 @@ class SockBaseServer implements Runnable {
             case 6: // Generate a new board
                 game = new Game();
                 game.newGame(grading, game.getDifficulty()); // Reinitialize with current difficulty
+                System.out.println("\nSolved Board:");
+                System.out.println(game.getSolvedBoard());
                 message = name + ", a new board has been generated. Good luck! " +
                         "\nNote: generating a new board also deducts 5 points.";
                 evalType = Response.EvalType.RESET_BOARD;

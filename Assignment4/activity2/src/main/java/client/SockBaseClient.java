@@ -88,6 +88,7 @@ class SockBaseClient {
                         break;
 
                     case ERROR:
+                        System.out.println(response.getMenuoptions());
                         req = errorResponse(req, response);
                         break;
 
@@ -357,7 +358,7 @@ class SockBaseClient {
             try {
                 int temp = Integer.parseInt(row);
                 if (temp < 1 || temp > 9) {
-                    System.out.println("Please choose and integer 1-9");
+                    System.out.println("Enter the row as an integer (1 - 9): ");
                     throw new NumberFormatException();
                 }
                 break;
@@ -380,7 +381,7 @@ class SockBaseClient {
             try {
                 int temp = Integer.parseInt(col);
                 if (temp < 1 || temp > 9) {
-                    System.out.println("Please choose and integer 1-9");
+                    System.out.println("Enter the column as an integer (1 - 9): ");
                     throw new NumberFormatException();
                 }
                 break;
@@ -418,7 +419,7 @@ class SockBaseClient {
             try {
                 int temp = Integer.parseInt(row);
                 if (temp < 1 || temp > 9) {
-                    System.out.println("Please choose and integer 1-9");
+                    System.out.println("Enter the row as an integer (1 - 9): ");
                     throw new NumberFormatException();
                 }
                 break;
@@ -457,7 +458,7 @@ class SockBaseClient {
             try {
                 int temp = Integer.parseInt(col);
                 if (temp < 1 || temp > 9) {
-                    System.out.println("Please choose and integer 1-9");
+                    System.out.println("Enter the column as an integer (1 - 9): ");
                     throw new NumberFormatException();
                 }
                 break;
@@ -496,7 +497,7 @@ class SockBaseClient {
             try {
                 int temp = Integer.parseInt(grid);
                 if (temp < 1 || temp > 9) {
-                    System.out.println("Please choose and integer 1-9");
+                    System.out.println("Enter the grid as an integer (1 - 9): ");
                     throw new NumberFormatException();
                 }
                 break;

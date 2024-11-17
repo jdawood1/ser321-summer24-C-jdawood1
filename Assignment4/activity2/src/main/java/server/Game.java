@@ -269,6 +269,7 @@ public class Game {
             // clear grid back to original
             int startRow = (row / 3) * 3;
             int startCol = (column / 3) * 3;
+            System.out.println("Clearing grid with startRow: " + startRow + ", startCol: " + startCol);
 
             for (int i = startRow; i < startRow + 3; i++) {
                 System.arraycopy(referenceBoard[i], startCol, playerBoard[i], startCol, startCol + 3 - startCol);
