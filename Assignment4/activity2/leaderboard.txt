@@ -1,3 +1,7 @@
+<<<<<<< HEAD
 Alex,20,0
 John,0,27
 Cameron,20,6
+=======
+John,15,6
+>>>>>>> dd0ed855429c0edfe7e0f10f8a266de3e0b2d2a3

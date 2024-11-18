@@ -493,6 +493,8 @@ class SockBaseServer implements Runnable {
                 break;
 
             case 6: // Generate a new board
+                updateLeaderboard();
+                int currentScore = game.getPoints();
                 game = new Game();
                 game.newGame(grading, game.getDifficulty()); // Reinitialize with current difficulty
                 System.out.println("\nSolved Board:");
@@ -506,6 +508,7 @@ class SockBaseServer implements Runnable {
                         .setPoints(game.getPoints())
                         .setMenuoptions(SockBaseServer.gameOptions)
                         .setMessage(message)
+                        .setPoints(game.setPoints(currentScore - 5))
                         .setType(evalType)
                         .setNext(3)
                         .build();
