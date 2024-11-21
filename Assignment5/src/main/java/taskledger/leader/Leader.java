@@ -117,6 +117,7 @@ public class Leader {
                 // 7. Distribute Task Among Nodes
                 int splitSize = numberList.length / nodeSockets.size();
                 List<NodeHandler> handlers = new ArrayList<>();
+                long distributedStartTime = System.currentTimeMillis();
                 for (int i = 0; i < nodeSockets.size(); i++) {
                     Socket nodeSocket = nodeSockets.get(i);
                     int start = i * splitSize;
@@ -185,13 +186,14 @@ public class Leader {
                         System.out.println("Timeout or error while waiting for node " + handler.getId() + " during verification: " + e.getMessage());
                     }
                 }
+                long distributedTimeTaken = System.currentTimeMillis() - distributedStartTime;
 
                 // 10. Determine Final Result Based on Consensus
                 if (nodesAgreed > (handlers.size() / 2)) { // by majority vote
                     System.out.println("Consensus achieved. " + nodesAgreed + " out of " + handlers.size() + " nodes agreed.");
                     int totalSum = partialSums.stream().mapToInt(Integer::intValue).sum();
-                    clientOut.printf("RESULT: %d%n", totalSum);
-                    System.out.printf("Total sum calculated by Leader: %d%n", totalSum);
+                    clientOut.printf("FINAL_RESULT: Final Result received from Leader: %d, Distributed Time Taken: %d ms%n", totalSum, distributedTimeTaken);
+                    System.out.printf("Total sum calculated by Leader: %d, Distributed Time Taken: %d ms%n", totalSum, distributedTimeTaken);
                 } else {
                     System.out.println("Consensus failed. Only " + nodesAgreed + " out of " + handlers.size() + " nodes agreed.");
                     clientOut.println("ERROR: Consensus failed. Results from nodes are inconsistent.");

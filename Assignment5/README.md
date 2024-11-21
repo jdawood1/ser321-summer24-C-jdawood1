@@ -41,7 +41,7 @@ The project distributes the sum calculation across nodes, demonstrating a basic 
 - Client receives result after verification.
 
 ##### Chosen Protocol
-The leader-follower model is used, where the leader distributes work to nodes and performs a cross-verification of the results. A majority consensus is needed to proceed with delivering the final sum.
+The leader-worker model is used, where the leader distributes work to nodes and performs a cross-verification of the results. A majority consensus is needed to proceed with delivering the final sum.
 
 ###### Intended Workflow
 - The client sends a list of numbers and delay value.

@@ -33,8 +33,8 @@ public class Client {
             while ((leaderResponse = in.readLine()) != null) {
                 if (leaderResponse.startsWith("SINGLE_RESULT:")) {
                     System.out.println(leaderResponse.substring(14).trim());
-                } else if (leaderResponse.startsWith("RESULT:")) {
-                    System.out.println("Final Result received from Leader: " + leaderResponse.substring(7).trim());
+                } else if (leaderResponse.startsWith("FINAL_RESULT:")) {
+                    System.out.println(leaderResponse.substring(13).trim());
                 } else if (leaderResponse.startsWith("ERROR:")) {
                     System.out.println(leaderResponse.substring(6).trim());
                 }else {

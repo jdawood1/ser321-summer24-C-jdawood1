@@ -8,6 +8,7 @@ public class Node {
     private static final String HOST = "localhost";
     private static final int PORT = 8000;
     private static boolean isFaulty = false;
+    private static int delay = 0;
 
     public static void main(String[] args) {
         parseArguments(args);
@@ -67,6 +68,7 @@ public class Node {
             }
 
             String currentTask = parts[0].substring(5).trim();
+            delay = Integer.parseInt(parts[1].trim());
             int sum = calculateSum(currentTask);
             sum = modifySumIfFaulty(sum, "Node is faulty. Sending incorrect sum: ");
 
@@ -113,8 +115,13 @@ public class Node {
 
         String[] numbers = numbersString.split(",");
         int sum = 0;
-        for (String num : numbers) {
-            sum += Integer.parseInt(num.trim());
+        try {
+            for (String num : numbers) {
+                sum += Integer.parseInt(num.trim());
+                Thread.sleep(delay); // Simulate computation delay
+            }
+        } catch (InterruptedException e) {
+            System.out.println("Error during sum calculation with delay: " + e.getMessage());
         }
         return sum;
     }
