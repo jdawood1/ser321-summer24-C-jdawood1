@@ -2,65 +2,81 @@ package taskledger.client;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Client {
-    private static final String HOST = "localhost";
-    private static final int PORT = 8000;
+    private static final String SERVER_HOST = "localhost";
+    private static final int SERVER_PORT = 8000;
 
     public static void main(String[] args) {
-        String[] input = parseArguments(args);
-        String numbers = input[0];
-        int delay = Integer.parseInt(input[1]);
+        try (Socket socket = new Socket(SERVER_HOST, SERVER_PORT);
+             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+             Scanner scanner = new Scanner(System.in)) {
 
-        // Connecting to the Leader
-        try (Socket socket = new Socket(HOST, PORT)) {
-            System.out.println("Client connected to Leader on port " + PORT + "...");
+            System.out.println("Connected to the leader at " + SERVER_HOST + ":" + SERVER_PORT);
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-
-            // Send a greeting message to the Leader
-            out.println("GREETING: Hello Leader!");
-            String leaderResponse = in.readLine();
-            System.out.println("Leader says: " + leaderResponse);
-
-            // Send the numbers and delay time to the Leader
-            out.println("NUMBERS: " + numbers + ", DELAY: " + delay);
-            leaderResponse = in.readLine();
-            System.out.println("Leader says: " + leaderResponse);
-
-            // Handle response from the Leader
-            while ((leaderResponse = in.readLine()) != null) {
-                if (leaderResponse.startsWith("SINGLE_RESULT:")) {
-                    System.out.println(leaderResponse.substring(14).trim());
-                } else if (leaderResponse.startsWith("FINAL_RESULT:")) {
-                    System.out.println(leaderResponse.substring(13).trim());
-                } else if (leaderResponse.startsWith("ERROR:")) {
-                    System.out.println(leaderResponse.substring(6).trim());
-                }else {
-                    System.out.println("Unexpected message from Leader: " + leaderResponse);
-                }
+            // 1. Greet the Leader
+            System.out.print("Enter a greeting message for the leader: ");
+            String greeting = scanner.nextLine();
+            out.println("GREETING:" + greeting);
+            String response = in.readLine();
+            if (response == null || response.startsWith("Error")) {
+                System.out.println("Leader rejected the greeting: " + response);
+                return;
             }
-        } catch (IOException e) {
-            System.err.println("Connection error: " + e.getMessage());
-        }
-    }
+            System.out.println("Leader responded: " + response);
 
-    private static String[] parseArguments(String[] args) {
-        String numbers = "1,2,3,4,5,6";
-        String delay = "50";
+            // 2. Ask User for Numbers
+            System.out.print("Enter a series of numbers separated by commas (e.g., 1,2,3): ");
+            String numbersInput = scanner.nextLine();
+            if (numbersInput.trim().isEmpty()) {
+                System.out.println("Error: Numbers list cannot be empty.");
+                return;
+            }
 
-        if (args.length >= 2) {
-            numbers = args[0];
+            // Validate input
+            String[] numberTokens = numbersInput.split(",");
             try {
-                Integer.parseInt(args[1]); // Just for validation
-                delay = args[1];
+                for (String token : numberTokens) {
+                    Integer.parseInt(token.trim()); // Validate each number
+                }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid delay value provided. Using default delay of 50 ms.");
+                System.out.println("Invalid number format. Please enter valid integers separated by commas.");
+                return;
             }
-        } else {
-            System.out.println("No arguments provided. Using default values: numbers = " + numbers + ", delay = " + delay);
+
+            // 3. Ask User for Delay
+            System.out.print("Enter a delay in milliseconds (e.g., 1000): ");
+            String delayInput = scanner.nextLine();
+            int delay;
+            try {
+                delay = Integer.parseInt(delayInput.trim());
+                if (delay < 0) {
+                    System.out.println("Delay cannot be negative.");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid delay. Please enter a valid integer.");
+                return;
+            }
+
+            // 4. Send Data to the Leader
+            out.println("NUMBERS:" + numbersInput + ", DELAY:" + delay);
+            response = in.readLine();
+            if (response == null || response.startsWith("Error")) {
+                System.out.println("Leader rejected the numbers input: " + response);
+                return;
+            }
+            System.out.println("Leader acknowledged numbers: " + response);
+
+            // 5. Wait for Results
+            while ((response = in.readLine()) != null) {
+                System.out.println("Leader says: " + response);
+            }
+
+        } catch (IOException e) {
+            System.err.println("Communication error: " + e.getMessage());
         }
-        return new String[]{numbers, delay};
     }
 }

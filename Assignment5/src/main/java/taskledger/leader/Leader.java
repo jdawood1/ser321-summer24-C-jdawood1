@@ -1,5 +1,7 @@
 package taskledger.leader;
 
+import java.net.SocketTimeoutException;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -8,7 +10,7 @@ import java.util.List;
 
 public class Leader {
     private static final int PORT = 8000;
-    private static final int NODE_CONNECTION_TIMEOUT = 90000; // Timeout (90 seconds)
+    private static final int NODE_CONNECTION_TIMEOUT = 60000; // Timeout (60 seconds)
     private static final int MIN_NODES_REQUIRED = 3;
     private static final List<Socket> nodeSockets = new ArrayList<>();
 
@@ -99,7 +101,8 @@ public class Leader {
                 }
 
                 if (nodeSockets.size() < MIN_NODES_REQUIRED) {
-                    clientOut.println("Error: Not enough nodes connected. Need at least " + MIN_NODES_REQUIRED + ".");
+                    System.out.println("Error: Not enough nodes connected. Need at least " + MIN_NODES_REQUIRED + ".");
+                    clientOut.println("Error: Not enough nodes connected. Computation aborted.");
                     return;
                 }
 
@@ -153,6 +156,7 @@ public class Leader {
 
                 // 9. Perform Consensus Check
                 int nodesAgreed = 0;
+                int timeout = 5000;
                 for (int i = 0; i < handlers.size(); i++) {
                     NodeHandler handler = handlers.get(i);
                     if (!handler.hasResponded()) {
@@ -170,6 +174,7 @@ public class Leader {
                     String taskToVerify = targetHandler.getTask();
 
                     try {
+                        nodeSocket.setSoTimeout(timeout);
                         PrintWriter out = new PrintWriter(nodeSocket.getOutputStream(), true);
                         out.println("VERIFY_SUM: " + sumToVerify + ", TASK: " + taskToVerify);
                         System.out.printf("Sent VERIFY message to Node %d with sum: %d and task: %s%n", handler.getId(), sumToVerify, taskToVerify);
@@ -182,8 +187,10 @@ public class Leader {
                         } else {
                             System.out.printf("Node %d disagrees with the sum: %d from Node %d and responded with: %s%n", handler.getId(), sumToVerify, targetHandler.getId(), response);
                         }
+                    } catch (SocketTimeoutException e) {
+                        System.out.printf("Timeout: Node %d did not respond within %d ms during verification.%n", handler.getId(), timeout);
                     } catch (IOException e) {
-                        System.out.println("Timeout or error while waiting for node " + handler.getId() + " during verification: " + e.getMessage());
+                        System.out.printf("Error: Communication issue with Node %d during verification: %s%n", handler.getId(), e.getMessage());
                     }
                 }
                 long distributedTimeTaken = System.currentTimeMillis() - distributedStartTime;

@@ -1,15 +1,12 @@
 plugins {
-    // Apply the Java plugin for Java projects.
-    id 'java'
+    id 'java' // Java projects
 }
 
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
 
 dependencies {
-    // Use JUnit test framework.
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
 }
@@ -29,6 +26,7 @@ tasks.register('runClient', JavaExec) {
     mainClass = 'taskledger.client.Client'
     classpath = sourceSets.main.runtimeClasspath
     description = 'Run the Client program'
+    standardInput = System.in
 }
 
 // Task to run the Leader
@@ -43,8 +41,6 @@ tasks.register('runNode', JavaExec) {
     mainClass = 'taskledger.node.Node'
     classpath = sourceSets.main.runtimeClasspath
     description = 'Run the Node program'
-    if (project.hasProperty('fault')) {
-        args "-fault"
-    }
+    args = project.hasProperty('fault') ? ['-fault'] : []
 }
 
