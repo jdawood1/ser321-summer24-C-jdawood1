@@ -1,0 +1,60 @@
+// Basic weight tracking service where clients can add their weight,
+// request to see their weight history or calculate BMI.
+// Weight history data remains persistent if the server goes offline. 
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "service";
+option java_outer_classname = "WeightTrackerProto";
+
+package services;
+
+service WeightTracker {
+  rpc addWeight (AddWeightRequest) returns (AddWeightResponse) {}
+  rpc getWeight (GetWeightRequest) returns (GetWeightResponse) {}
+  rpc getBMI (BMIRequest) returns (BMIResponse) {}
+}
+
+// Request to add new weight
+message AddWeightRequest {
+  Weight weight = 1;
+}
+
+// Response from the server
+message AddWeightResponse {
+  bool isSuccess = 1;
+  string error = 2;
+}
+
+// Request a weight history by user name
+message GetWeightRequest {
+  string name = 1;
+}
+
+// Response from the server
+message GetWeightResponse {
+  bool isSuccess = 1;
+  string error = 2;
+  repeated Weight weight = 3;
+}
+
+// Request a BMI
+message BMIRequest {
+  double weight = 1;
+  double height = 2;
+  string units = 3;
+}
+
+// Response from the server
+message BMIResponse {
+  bool isSuccess = 1;
+  string error = 2;
+  double BMI = 3;
+}
+
+// A single weight
+message Weight {
+  string name = 1;  
+  double weightNum = 2; 
+}

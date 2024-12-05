@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "service";
+option java_outer_classname = "TriviaProto";
+
+package services;
+
+// Trivia Master Service
+service TriviaMaster {
+  rpc addQuestion (AddQuestionReq) returns (AddQuestionRes) {} // Add a trivia question
+  rpc getQuestion (GetQuestionReq) returns (GetQuestionRes) {} // Retrieve trivia question(s)
+  rpc answerQuestion (AnswerQuestionReq) returns (AnswerQuestionRes) {} // Attempt to answer a question
+}
+
+// Request to add a trivia question
+message AddQuestionReq {
+  string question = 1;
+  string answer = 2;
+}
+
+// Response for adding a trivia question
+message AddQuestionRes {
+  bool isSuccess = 1;
+  string message = 2; // A success or error message
+}
+
+// Request to get trivia question(s)
+message GetQuestionReq {
+  bool random = 1; // Whether to get a random question
+  int32 count = 2; // Number of questions to retrieve (only if random is false)
+}
+
+// Response containing trivia question(s)
+message GetQuestionRes {
+  repeated string questions = 1; // List of trivia questions
+}
+
+// Request to answer a trivia question
+message AnswerQuestionReq {
+  string question = 1; // The question being answered
+  string answer = 2;   // The user's answer
+}
+
+// Response to answering a trivia question
+message AnswerQuestionRes {
+  bool isCorrect = 1; // Whether the answer is correct
+  string message = 2; // Feedback message
+}

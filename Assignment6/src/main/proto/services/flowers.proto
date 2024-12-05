@@ -1,0 +1,73 @@
+// Users can plant flowers. These flowers can start blooming if they are watered a certain number of times. Once they bloom they bloom for bloomTime hours. The bloom time can be increased when the client cares for the flower regularly. Caring only has an effect during blooming and watering only while it is not blooming and not dead.
+//To avoid having to have a separate timer for each flower you can consider having one global time(r) and as soon as a flower starts blooming you calculate until when it should bloom and save that time in your flower. When it is "cared for" you just add time to it. You only need to check the status of each flower for the "viewFlower" rpc and then make sure that their time "is not over". Or you can handle it any other way you like. 
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "service";
+option java_outer_classname = "FlowerProto";
+
+package services;
+import "google/protobuf/empty.proto";
+
+service Flowers {
+  rpc plantFlower (FlowerReq) returns (FlowerRes) {}
+  rpc viewFlowers (google.protobuf.Empty) returns (FlowerViewRes) {}
+  rpc waterFlower (FlowerCare) returns (WaterRes) {}
+  rpc careForFlower (FlowerCare) returns (CareRes) {}
+}
+
+// REQUEST: To add a new Flower to your garden, name is the name of the flower, waterTimes is a number that specifies how many times the flower needs to be watered before it blooms, bloomTime is a number that says how long the flower blooms in hours before it dies. When the flower stops blooming it dies. 
+message FlowerReq {
+    string name = 1;
+    int32 waterTimes = 2;
+    int32 bloomTime = 3;
+}
+
+// RESPONSE: Validates if the flower was added
+message FlowerRes {
+  bool isSuccess = 1;
+  string message = 2; // some message telling the client all is good
+  string error = 3; // only given when isSuccess is false, should throw an error if the name of that flower is already taken. Or numbers are way too high, limit to 6. 
+}
+
+// RESPONSE: Shows a list of all flowers that are planted, with its information, error message if there are not flowers. 
+message FlowerViewRes {
+  bool isSuccess = 1;
+  repeated Flower flowers= 2;
+  string error = 3; // only given when isSuccess is false
+}
+
+// REQUEST: Watering a specific flower, based on the name
+message FlowerCare {
+    string name = 1;
+}
+
+// RESPONSE: Validates that the plant was watered, gives error if flower is dead or blooming
+message WaterRes {
+  bool isSuccess = 1;
+  string message = 2;
+  string error = 3; // only given when isSuccess is false
+}
+
+// RESPONSE: Validates that the plant was cared for and gives the number of hours it can now bloom, with every caring the bloom time increases by 1 hour. Gives an error if the flower does not bloom yet. 
+message CareRes {
+  bool isSuccess = 1;
+  string message = 2;
+  int32 bloomTime = 3; // current bloom time
+  string error = 4; // only given when isSuccess is false
+}
+
+enum State {
+    PLANTED = 0;
+    BLOOMING = 1;
+    DEAD = 2; 
+  }
+
+// Entity: Flower
+message Flower {
+  string name = 1;
+  int32 waterTimes = 2; // how many times the flower needs to be watered before blooming
+  int32 bloomTime = 3; // shows how many hours the flower will bloom (will go up with care requests, will go down as time goes on)
+  State flowerState = 4;
+}

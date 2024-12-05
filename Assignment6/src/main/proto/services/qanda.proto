@@ -1,0 +1,57 @@
+// This is meant as a little Q & A "database". Client can enter their questions. Then others can view all questions, and write an answer to the question which will be saved and diplayed with the questions. A question can have many answers. 
+
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "service";
+option java_outer_classname = "QandAProto";
+
+package services;
+import "google/protobuf/empty.proto";
+
+service Qanda {
+  rpc addQuestion (QuestionReq) returns (QuestionRes) {} // Add question to DB
+  rpc viewQuestions (google.protobuf.Empty) returns (AllQuestionsRes) {} // Display all questions
+  rpc addAnswer (AnswerReq) returns (AnswerRes) {} //Answer the question
+}
+
+// REQUEST: Add an question
+message QuestionReq {
+    Question question = 1; // Question object which will not include an answer yet
+}
+
+// RESPONSE: Validation for adding a question
+message QuestionRes {
+  bool isSuccess = 1; // if question was added response is true, else it is false.
+  string message = 2; // Message stating the question was added.
+  string error = 3;   // Error message if isSuccess is false
+}
+
+
+// RESPONSE: View all questions
+message AllQuestionsRes {
+  bool isSuccess = 1; //true if the request was successful and at least one question exists
+  repeated Question questions = 2; // Questions with all its fields
+  string error = 3; //Error message if isSuccess is false
+}
+
+// REQUEST: So, someone adds an answer
+message AnswerReq {
+  int32 id = 1; // id of the question to provide an answer to
+  string answer =2; // Provided answer
+}
+
+message AnswerRes {
+  bool isSuccess = 1; // true if the request was successful
+  Question question = 2; // Shows the current question with the provided id from req
+  string error = 3; //Error message if isSuccess is false, e.g. id does not exists
+}
+
+// Question
+message Question {
+   int32 id = 1; 
+   string question = 2; 
+   string who = 3; // person who asked the question
+   repeated string answers = 4; // answers to the question
+}

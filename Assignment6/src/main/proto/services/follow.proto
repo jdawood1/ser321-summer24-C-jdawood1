@@ -1,0 +1,30 @@
+// Description: Has 3 RPCs: addUser (adds user to system), follow (user requests to  follow another user)
+// and viewFollowing (see who a user is following).  A user cannot be added to the system if they were
+// already added, and a user cannot be followed unless they are already registered as a user.
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "service";
+option java_outer_classname = "FollowProto";
+
+package services;
+
+service Follow {
+  rpc addUser (UserReq) returns (UserRes) {}
+  rpc follow (UserReq) returns (UserRes) {}
+  rpc viewFollowing (UserReq) returns (UserRes) {}
+}
+
+// The request message
+message UserReq {
+  string name = 1; // name of user making the request
+  string followName = 2; // only for follow - name that the user wants to follow
+}
+
+// The response message
+message UserRes {
+  bool isSuccess = 1; // bool if req was successfully processed
+  string error = 2; // error message if unsuccessful
+  repeated string followedUser = 3; // only for viewFollowing - names that the user is following
+}
